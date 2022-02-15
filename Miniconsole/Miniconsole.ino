@@ -57,7 +57,7 @@ void loop() {
         int i = 0;
         int y = 0;
         for (ConsoleGame *game : games) {
-          drawText(((i == currGameSelection ? "- " : "") + game->GameName()).c_str(), 1, y, WHITE);
+          drawText(((i == currGameSelection ? "- " : "") + game->GameName()).c_str(), 1, y, (i==currGameSelection) ? YELLOW : WHITE);
           y += 25;
           i++;
         }
