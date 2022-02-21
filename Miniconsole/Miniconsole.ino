@@ -18,6 +18,18 @@ int consoleState = 0;
 ConsoleGame *currentGame;
 int currGameSelection = 0;
 
+//Button setup
+//#define BTN_A 34
+//#define BTN_B 35
+//#define BTN_LEFT 32
+//#define BTN_UP 33
+//#define BTN_RIGHT 25
+//#define BTN_DOWN 26
+
+//a,b,left,up,right,down
+int btns[6] = {27, 14, 32, 33, 25, 26};
+
+//Screen setup
 #define SCLK_PIN 18
 #define MOSI_PIN 23
 #define DC_PIN   16
@@ -46,18 +58,32 @@ void setup() {
     gameCount++;
   }
 
+  //Setup inputs
+  //  pinMode(BTN_A, INPUT_PULLUP);
+  //  pinMode(BTN_B, INPUT_PULLUP);
+  //  pinMode(BTN_LEFT, INPUT_PULLUP);
+  //  pinMode(BTN_UP, INPUT_PULLUP);
+  //  pinMode(BTN_RIGHT, INPUT_PULLUP);
+  //  pinMode(BTN_DOWN, INPUT_PULLUP);
+
+  for (int i = 0; i < 6; i++) {
+    pinMode(btns[i], INPUT_PULLUP);
+  }
+
   oled.begin();
   oled.fillScreen(BLACK);
   //lcdTestPattern();
 }
 
 void loop() {
+  HandleInputs();
+
   switch (consoleState) {
     case 0: {
         int i = 0;
         int y = 0;
         for (ConsoleGame *game : games) {
-          drawText(((i == currGameSelection ? "- " : "") + game->GameName()).c_str(), 1, y, (i==currGameSelection) ? YELLOW : WHITE);
+          drawText(((i == currGameSelection ? "- " : "") + game->GameName()).c_str(), 1, y, (i == currGameSelection) ? YELLOW : WHITE);
           y += 25;
           i++;
         }
@@ -73,16 +99,38 @@ void loop() {
         break;
       }
     case 2: {
-        //      for (int pinBind : currentGame->analoguePinBindings) {
-        //        //currentGame->AnaloguePinUpdate(pinBind, analogRead(pinBind));
-        //      }
-        //      for (int pinBind : currentGame->digitalPinBindings) {
-        //        //currentGame->DigitalPinUpdate(pinBind, digitalRead(pinBind));
-        //      }
-        //currentGame->Draw();
-
+        currentGame->Draw();
         break;
       }
+  }
+}
+
+void HandleInputs() {
+  //  int btnA_Val = digitalRead(BTN_A);
+  //  if (btnA_Val == LOW) {
+  //    Serial.println("A DOWN");
+  //  }
+  //
+  //  int btnB_Val = digitalRead(BTN_B);
+  //  if (btnB_Val == LOW) {
+  //    Serial.println("B DOWN");
+  //  }
+  //
+  //  int btnA_Val = digitalRead(BTN_A);
+  //  if (btnA_Val == LOW) {
+  //    Serial.println("A DOWN");
+  //  }
+  //
+  //  int btnB_Val = digitalRead(BTN_B);
+  //  if (btnB_Val == LOW) {
+  //    Serial.println("B DOWN");
+  //  }
+  for (int i = 0; i < 6; i++) {
+    int val = digitalRead(btns[i]);
+    if (val == LOW) {
+      Serial.print(btns[i]);
+      Serial.println(" DOWN");
+    }
   }
 }
 
