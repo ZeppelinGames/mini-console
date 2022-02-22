@@ -1,13 +1,12 @@
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1351.h>
-#include <SPI.h>
+//#include <Adafruit_GFX.h>
+//#include <Adafruit_SSD1351.h>
+//#include <SPI.h>
 
+//#include "Display.cpp"
 #include "Breakout.cpp"
 
-#define SCREEN_WIDTH  128
-#define SCREEN_HEIGHT 128 // Change this to 96 for 1.27" OLED.
-
-ConsoleGame *games[] = {new Breakout()};
+Display *disp = new Display();
+ConsoleGame *games[] = {new Breakout(disp)};
 int gameCount = 0;
 
 //0 - Selecting game / main menu
@@ -18,34 +17,30 @@ int consoleState = 0;
 ConsoleGame *currentGame;
 int currGameSelection = 0;
 
-//Button setup
-//#define BTN_A 34
-//#define BTN_B 35
-//#define BTN_LEFT 32
-//#define BTN_UP 33
-//#define BTN_RIGHT 25
-//#define BTN_DOWN 26
-
 //a,b,left,up,right,down
-int btns[6] = {27, 14, 32, 33, 25, 26};
+int btns[6] = {26, 27, 14, 32, 33, 25};
+bool btnVals[6];
 
-//Screen setup
-#define SCLK_PIN 18
-#define MOSI_PIN 23
-#define DC_PIN   16
-#define CS_PIN   17
-#define RST_PIN  5
+////Screen setup
+//#define SCREEN_WIDTH  128
+//#define SCREEN_HEIGHT 128 // Change this to 96 for 1.27" OLED.
 
-Adafruit_SSD1351 oled = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, CS_PIN, DC_PIN, MOSI_PIN, SCLK_PIN, RST_PIN);
-
-#define BLACK           0x0000
-#define BLUE            0x001F
-#define RED             0xF800
-#define GREEN           0x07E0
-#define CYAN            0x07FF
-#define MAGENTA         0xF81F
-#define YELLOW          0xFFE0
-#define WHITE           0xFFFF
+//#define SCLK_PIN 18
+//#define MOSI_PIN 23
+//#define DC_PIN   16
+//#define CS_PIN   17
+//#define RST_PIN  5
+//
+//Adafruit_SSD1351 oled = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, CS_PIN, DC_PIN, MOSI_PIN, SCLK_PIN, RST_PIN);
+//
+//#define BLACK           0x0000
+//#define BLUE            0x001F
+//#define RED             0xF800
+//#define GREEN           0x07E0
+//#define CYAN            0x07FF
+//#define MAGENTA         0xF81F
+//#define YELLOW          0xFFE0
+//#define WHITE           0xFFFF
 
 void setup() {
   Serial.begin(115200);
@@ -58,20 +53,12 @@ void setup() {
     gameCount++;
   }
 
-  //Setup inputs
-  //  pinMode(BTN_A, INPUT_PULLUP);
-  //  pinMode(BTN_B, INPUT_PULLUP);
-  //  pinMode(BTN_LEFT, INPUT_PULLUP);
-  //  pinMode(BTN_UP, INPUT_PULLUP);
-  //  pinMode(BTN_RIGHT, INPUT_PULLUP);
-  //  pinMode(BTN_DOWN, INPUT_PULLUP);
-
   for (int i = 0; i < 6; i++) {
     pinMode(btns[i], INPUT_PULLUP);
   }
 
-  oled.begin();
-  oled.fillScreen(BLACK);
+  disp->disp.begin();
+  disp->disp.fillScreen(BLACK);
   //lcdTestPattern();
 }
 
@@ -87,6 +74,11 @@ void loop() {
           y += 25;
           i++;
         }
+
+        if (btnVals[0]) {
+          currentGame = games[currGameSelection];
+          consoleState = 1;
+        }
         break;
       }
     case 1: {
@@ -100,50 +92,41 @@ void loop() {
       }
     case 2: {
         currentGame->Draw();
+
+        if (btnVals[1]) {
+          disp->disp.fillScreen(BLACK);
+          consoleState = 0;
+        }
         break;
       }
   }
 }
 
 void HandleInputs() {
-  //  int btnA_Val = digitalRead(BTN_A);
-  //  if (btnA_Val == LOW) {
-  //    Serial.println("A DOWN");
-  //  }
-  //
-  //  int btnB_Val = digitalRead(BTN_B);
-  //  if (btnB_Val == LOW) {
-  //    Serial.println("B DOWN");
-  //  }
-  //
-  //  int btnA_Val = digitalRead(BTN_A);
-  //  if (btnA_Val == LOW) {
-  //    Serial.println("A DOWN");
-  //  }
-  //
-  //  int btnB_Val = digitalRead(BTN_B);
-  //  if (btnB_Val == LOW) {
-  //    Serial.println("B DOWN");
-  //  }
   for (int i = 0; i < 6; i++) {
     int val = digitalRead(btns[i]);
+    btnVals[i] = val == LOW;
     if (val == LOW) {
       Serial.print(btns[i]);
       Serial.println(" DOWN");
     }
   }
+
+  if (currentGame != NULL) {
+    currentGame->UpdateInputs(btnVals);
+  }
 }
 
 void drawText(char const* text, int posX, int posY, uint16_t color) {
-  oled.setCursor(posX, posY);
-  oled.setTextColor(color);
-  oled.print(text);
+  disp->disp.setCursor(posX, posY);
+  disp->disp.setTextColor(color);
+  disp->disp.print(text);
 }
 
 void lcdTestPattern() {
   const uint16_t colors[] = { RED, YELLOW, GREEN, CYAN, BLUE, MAGENTA, BLACK, WHITE };
 
   for (uint8_t c = 0; c < 8; c++) {
-    oled.fillRect(0, SCREEN_HEIGHT * c / 8, SCREEN_WIDTH, SCREEN_HEIGHT / 8, colors[c]);
+    disp->disp.fillRect(0, SCREEN_HEIGHT * c / 8, SCREEN_WIDTH, SCREEN_HEIGHT / 8, colors[c]);
   }
 }
