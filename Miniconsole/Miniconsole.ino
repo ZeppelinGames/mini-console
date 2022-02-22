@@ -18,7 +18,7 @@ ConsoleGame *currentGame;
 int currGameSelection = 0;
 
 //a,b,left,up,right,down
-int btns[6] = {26, 27, 14, 32, 33, 25};
+int btns[6] = {26, 27, 32, 33, 25, 14};
 bool btnVals[6];
 
 ////Screen setup
