@@ -3,11 +3,18 @@
 //#include <SPI.h>
 
 //#include "Display.cpp"
+
+//Include new games here
 #include "Breakout.cpp"
 #include "ControllerTest.cpp"
 
 Display *disp = new Display();
-ConsoleGame *games[] = {new ControllerTest(disp), new Breakout(disp)};
+
+//Add new games here
+ConsoleGame *games[] = {
+  new ControllerTest(disp),
+  new Breakout(disp)
+};
 int gameCount = 0;
 
 //0 - Selecting game / main menu
@@ -60,7 +67,7 @@ void setup() {
 
   disp->disp.begin();
   disp->disp.fillScreen(BLACK);
-  
+
   RedrawGames();
   //lcdTestPattern();
 }

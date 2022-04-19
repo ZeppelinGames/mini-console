@@ -23,26 +23,13 @@
 #define YELLOW 0xFFE0
 #define WHITE 0xFFFF
 
-class Display
-{
+class Display {
   public:
     Adafruit_SSD1351 disp = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, CS_PIN, DC_PIN, MOSI_PIN, SCLK_PIN, RST_PIN);
 
-    void DrawLine(int x1, int y1, int x2, int y2, int c)
-    {
-      disp.drawLine(x1, y1, x2, y2, c);
-    }
-
-    void DrawRect(int x, int y, int scaleX, int scaleY, int c)
-    {
-      disp.drawRect(x, y, scaleX, scaleY, c);
-    }
-
-    int RandomColour()
-    {
+    int RandomColour() {
       int rndIndex = random(6);
-      switch (rndIndex)
-      {
+      switch (rndIndex) {
         case 0:
           return BLUE;
           break;
@@ -63,7 +50,4 @@ class Display
           break;
       }
     }
-
-  private:
-
 };
