@@ -94,7 +94,7 @@ void loop() {
     case 2: {
         currentGame->Draw();
 
-        if (btnVals[1]) {
+        if (btnVals[0] && btnVals[1]) {
           disp->disp.fillScreen(BLACK);
           consoleState = 0;
         }

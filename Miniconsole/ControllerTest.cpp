@@ -21,6 +21,7 @@ class ControllerTest : public ConsoleGame {
         if (inputs[i]) {
           disp->disp.fillCircle(btCPos[(i * 2)], btCPos[(i * 2) + 1], 10, RED);
         } else {
+          disp->disp.fillCircle(btCPos[(i * 2)], btCPos[(i * 2) + 1], 11, BLACK);
           disp->disp.drawCircle(btCPos[(i * 2)], btCPos[(i * 2) + 1], 10, WHITE);
         }
       }
@@ -28,11 +29,11 @@ class ControllerTest : public ConsoleGame {
 
   private:
     int btCPos[12] = {
-      32, 54,
-      48, 74,
-      64, 64,
-      72, 54,
-      80, 64,
-      72, 74
+      16, 54,
+      36, 74,
+      72, 64,
+      92, 44,
+      112, 64,
+      92, 84
     };
 };
