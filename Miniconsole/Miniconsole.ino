@@ -60,6 +60,8 @@ void setup() {
 
   disp->disp.begin();
   disp->disp.fillScreen(BLACK);
+  
+  RedrawGames();
   //lcdTestPattern();
 }
 
@@ -68,17 +70,22 @@ void loop() {
 
   switch (consoleState) {
     case 0: {
-        int i = 0;
-        int y = 0;
-        for (ConsoleGame *game : games) {
-          drawText(((i == currGameSelection ? "- " : "") + game->GameName()).c_str(), 1, y, (i == currGameSelection) ? YELLOW : WHITE);
-          y += 25;
-          i++;
-        }
-
+        //Select game
         if (btnVals[0]) {
           currentGame = games[currGameSelection];
           consoleState = 1;
+        }
+
+        //Move selection up
+        if (btnVals[3]) {
+          currGameSelection = currGameSelection + 1 > gameCount - 1 ? 0 : currGameSelection + 1;
+          RedrawGames();
+        }
+
+        //Move selection down
+        if (btnVals[5]) {
+          currGameSelection = currGameSelection - 1 < 0 ? gameCount - 1 : currGameSelection - 1;
+          RedrawGames();
         }
         break;
       }
@@ -88,6 +95,7 @@ void loop() {
           consoleState = 2;
         } else {
           consoleState = 0;
+          RedrawGames();
         }
         break;
       }
@@ -97,9 +105,21 @@ void loop() {
         if (btnVals[0] && btnVals[1]) {
           disp->disp.fillScreen(BLACK);
           consoleState = 0;
+          RedrawGames();
         }
         break;
       }
+  }
+}
+
+void RedrawGames() {
+  int i = 0;
+  int y = 0;
+  for (ConsoleGame *game : games) {
+    disp->disp.fillRect(1, y, 128, 16, BLACK);
+    drawText(((i == currGameSelection ? "- " : "") + game->GameName()).c_str(), 1, y, (i == currGameSelection) ? YELLOW : WHITE);
+    y += 18;
+    i++;
   }
 }
 
