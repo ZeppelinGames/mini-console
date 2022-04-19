@@ -4,6 +4,7 @@
 
 //#include "Display.cpp"
 #include "Breakout.cpp"
+//#include "ControllerTest.cpp"
 
 Display *disp = new Display();
 ConsoleGame *games[] = {new Breakout(disp)};

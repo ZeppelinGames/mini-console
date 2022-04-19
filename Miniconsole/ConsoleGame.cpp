@@ -7,7 +7,7 @@ class ConsoleGame {
     boolean inputs[6];
 
     Display *disp;
-    explicit ConsoleGame(Display *d) {
+    ConsoleGame(Display *d) {
       disp = d;
     }
 
