@@ -4,10 +4,10 @@
 
 //#include "Display.cpp"
 #include "Breakout.cpp"
-//#include "ControllerTest.cpp"
+#include "ControllerTest.cpp"
 
 Display *disp = new Display();
-ConsoleGame *games[] = {new Breakout(disp)};
+ConsoleGame *games[] = {new ControllerTest(disp), new Breakout(disp)};
 int gameCount = 0;
 
 //0 - Selecting game / main menu

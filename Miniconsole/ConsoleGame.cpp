@@ -1,4 +1,6 @@
-#include <string>
+#pragma once
+
+#include <string.h>
 #include "arduino.h"
 #include "Display.cpp"
 
