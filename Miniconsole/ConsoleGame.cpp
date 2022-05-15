@@ -21,6 +21,11 @@ class ConsoleGame {
         inputs[i] = newInputs[i];
       }
     }
+
+    void UpdateInput(int index, boolean val) {
+      inputs[index] = val;
+    }
+
     virtual void Setup();
     virtual void Draw();
 };

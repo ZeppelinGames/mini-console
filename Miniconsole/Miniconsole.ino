@@ -26,8 +26,11 @@ ConsoleGame *currentGame;
 int currGameSelection = 0;
 
 //a,b,left,up,right,down
-int btns[6] = {26, 27, 32, 33, 25, 14};
+int btns[6] = {14, 27, 33, 25, 26, 12};
+int lastMillis[6] = {0, 0, 0, 0, 0, 0};
 bool btnVals[6];
+
+int lastFrame = 0;
 
 ////Screen setup
 //#define SCREEN_WIDTH  128
@@ -50,6 +53,37 @@ bool btnVals[6];
 //#define YELLOW          0xFFE0
 //#define WHITE           0xFFFF
 
+void IRAM_ATTR ISR_0() {
+  HandleInput(0);
+}
+void IRAM_ATTR ISR_1() {
+  HandleInput(1);
+}
+void IRAM_ATTR ISR_2() {
+  HandleInput(2);
+}
+void IRAM_ATTR ISR_3() {
+  HandleInput(3);
+}
+void IRAM_ATTR ISR_4() {
+  HandleInput(4);
+}
+void IRAM_ATTR ISR_5() {
+  HandleInput(5);
+}
+
+void HandleInput(int i) {
+  Serial.println("Managing interrupt");
+  if (millis() - lastMillis[i] > 10) {
+    btnVals[i] = !btnVals[i];
+
+    if (currentGame != NULL) {
+      currentGame->UpdateInput(i, btnVals[i]);
+    }
+  }
+  lastMillis[i] = millis();
+}
+
 void setup() {
   Serial.begin(115200);
   Serial.println("Serial connection established");
@@ -63,7 +97,15 @@ void setup() {
 
   for (int i = 0; i < 6; i++) {
     pinMode(btns[i], INPUT_PULLUP);
+    btnVals[i] = false;
   }
+
+  attachInterrupt(btns[0], ISR_0, CHANGE);
+  attachInterrupt(btns[1], ISR_1, CHANGE);
+  attachInterrupt(btns[2], ISR_2, CHANGE);
+  attachInterrupt(btns[3], ISR_3, CHANGE);
+  attachInterrupt(btns[4], ISR_4, CHANGE);
+  attachInterrupt(btns[5], ISR_5, CHANGE);
 
   disp->disp.begin();
   disp->disp.fillScreen(BLACK);
@@ -73,13 +115,14 @@ void setup() {
 }
 
 void loop() {
-  HandleInputs();
+  //HandleInputs();
 
   switch (consoleState) {
     case 0: {
         //Select game
         if (btnVals[0]) {
           currentGame = games[currGameSelection];
+          currentGame->UpdateInputs(btnVals);
           consoleState = 1;
         }
 
@@ -107,7 +150,10 @@ void loop() {
         break;
       }
     case 2: {
-        currentGame->Draw();
+        if (millis() - lastFrame > 2) {
+          lastFrame = millis();
+          currentGame->Draw();
+        }
 
         if (btnVals[0] && btnVals[1]) {
           disp->disp.fillScreen(BLACK);
@@ -130,22 +176,7 @@ void RedrawGames() {
   }
 }
 
-void HandleInputs() {
-  for (int i = 0; i < 6; i++) {
-    int val = digitalRead(btns[i]);
-    btnVals[i] = val == LOW;
-    if (val == LOW) {
-      Serial.print(btns[i]);
-      Serial.println(" DOWN");
-    }
-  }
-
-  if (currentGame != NULL) {
-    currentGame->UpdateInputs(btnVals);
-  }
-}
-
-void drawText(char const* text, int posX, int posY, uint16_t color) {
+void drawText(char const * text, int posX, int posY, uint16_t color) {
   disp->disp.setCursor(posX, posY);
   disp->disp.setTextColor(color);
   disp->disp.print(text);

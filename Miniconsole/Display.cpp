@@ -1,3 +1,5 @@
+//https://github.com/adafruit/Adafruit-SSD1351-library/blob/master/examples/test/test.ino
+
 #pragma once
 
 #include <Adafruit_GFX.h>
@@ -27,6 +29,12 @@ class Display {
   public:
     Adafruit_SSD1351 disp = Adafruit_SSD1351(SCREEN_WIDTH, SCREEN_HEIGHT, CS_PIN, DC_PIN, MOSI_PIN, SCLK_PIN, RST_PIN);
 
+    void drawText(char const * text, int posX, int posY, uint16_t color) {
+      disp.setCursor(posX, posY);
+      disp.setTextColor(color);
+      disp.print(text);
+    }
+
     int RandomColour() {
       int rndIndex = random(6);
       switch (rndIndex) {
@@ -47,6 +55,9 @@ class Display {
           break;
         case 5:
           return YELLOW;
+          break;
+        default:
+          return BLUE;
           break;
       }
     }
