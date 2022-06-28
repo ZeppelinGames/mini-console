@@ -7,13 +7,15 @@
 //Include new games here
 #include "Breakout.cpp"
 #include "ControllerTest.cpp"
+#include "Pool.cpp"
 
 Display *disp = new Display();
 
 //Add new games here
 ConsoleGame *games[] = {
   new ControllerTest(disp),
-  new Breakout(disp)
+  new Breakout(disp),
+  new Pool(disp)
 };
 int gameCount = 0;
 
@@ -73,7 +75,6 @@ void IRAM_ATTR ISR_5() {
 }
 
 void HandleInput(int i) {
-  Serial.println("Managing interrupt");
   if (millis() - lastMillis[i] > 10) {
     btnVals[i] = !btnVals[i];
 
@@ -127,13 +128,13 @@ void loop() {
         }
 
         //Move selection up
-        if (btnVals[3]) {
+        if (btnVals[5]) {
           currGameSelection = currGameSelection + 1 > gameCount - 1 ? 0 : currGameSelection + 1;
           RedrawGames();
         }
 
         //Move selection down
-        if (btnVals[5]) {
+        if (btnVals[3]) {
           currGameSelection = currGameSelection - 1 < 0 ? gameCount - 1 : currGameSelection - 1;
           RedrawGames();
         }
