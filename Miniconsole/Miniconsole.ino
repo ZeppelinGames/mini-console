@@ -8,6 +8,7 @@
 #include "Breakout.cpp"
 #include "ControllerTest.cpp"
 #include "Pool.cpp"
+#include "tictactoe.cpp"
 
 Display *disp = new Display();
 
@@ -15,7 +16,8 @@ Display *disp = new Display();
 ConsoleGame *games[] = {
   new ControllerTest(disp),
   new Breakout(disp),
-  new Pool(disp)
+  new Pool(disp),
+  new tictactoe(disp)
 };
 int gameCount = 0;
 
@@ -81,8 +83,9 @@ void HandleInput(int i) {
     if (currentGame != NULL) {
       currentGame->UpdateInput(i, btnVals[i]);
     }
+
+    lastMillis[i] = millis();
   }
-  lastMillis[i] = millis();
 }
 
 void setup() {

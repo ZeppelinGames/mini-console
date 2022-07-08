@@ -6,6 +6,7 @@
 
 class ConsoleGame {
   public:
+    boolean prevInputs[6];
     boolean inputs[6];
 
     Display *disp;
@@ -18,12 +19,19 @@ class ConsoleGame {
 
     void UpdateInputs(boolean newInputs[]) {
       for (int i = 0; i < 6; i++) {
-        inputs[i] = newInputs[i];
+        if (inputs[i] != newInputs[i]) {
+          prevInputs[i] = inputs[i];
+          inputs[i] = newInputs[i];
+        }
       }
     }
 
-    void UpdateInput(int index, boolean val) {
-      inputs[index] = val;
+
+    void UpdateInput(int i, boolean val) {
+      if (inputs[i] != val) {
+        prevInputs[i] = inputs[i];
+        inputs[i] = val;
+      }
     }
 
     virtual void Setup();

@@ -35,9 +35,9 @@ class Pool : public ConsoleGame {
     }
 
     void Draw() {
-      disp->disp.fillRect(54, 54, 24, 24, YELLOW);
-      disp->disp.drawCircle(64, 64, 5, BLACK);
-      disp->disp.drawLine(64, 64, (int)(cos(aimAngle) * 10 + 64), (int)(sin(aimAngle) * 10 + 64), BLACK);
+//      disp->disp.fillRect(54, 54, 24, 24, YELLOW);
+//      disp->disp.drawCircle(64, 64, 5, BLACK);
+//      disp->disp.drawLine(64, 64, (int)(cos(aimAngle) * 10 + 64), (int)(sin(aimAngle) * 10 + 64), BLACK);
 
       if (inputs[2]) {
         aimAngle += 0.01;

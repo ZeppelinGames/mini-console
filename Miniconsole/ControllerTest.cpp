@@ -29,11 +29,12 @@ class ControllerTest : public ConsoleGame {
 
   private:
     int btCPos[12] = {
-      16, 54,
-      36, 74,
-      72, 64,
-      92, 44,
-      112, 64,
-      92, 84
+      92, 74,
+      112, 54,
+
+      16, 64,
+      36, 44,
+      56, 64,
+      36, 84
     };
 };
