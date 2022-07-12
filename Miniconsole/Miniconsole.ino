@@ -106,6 +106,7 @@ void setup() {
 
   for (int i = 0; i < 6; i++) {
     pinMode(btns[i], INPUT_PULLUP);
+    btnVals[i] = false;
   }
 
   attachInterrupt(btns[0], ISR_0, CHANGE);

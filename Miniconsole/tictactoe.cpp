@@ -27,6 +27,7 @@ class tictactoe : public ConsoleGame {
     void Setup() {
       Serial.println("Setting up TicTacToe");
 
+      gameOver = false;
       disp->disp.fillScreen(BLACK);
 
       for (int x = 0; x < 3; x++) {
@@ -102,7 +103,7 @@ class tictactoe : public ConsoleGame {
           if (gameOver) {
             return;
           }
-          
+
           turn = turn == 1 ? 0 : 1;
 
           DrawTurn(currX, currY);
