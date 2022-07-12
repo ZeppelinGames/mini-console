@@ -9,6 +9,7 @@
 #include "ControllerTest.cpp"
 #include "Pool.cpp"
 #include "tictactoe.cpp"
+#include "NotDoom.cpp"
 
 Display *disp = new Display();
 
@@ -17,7 +18,8 @@ ConsoleGame *games[] = {
   new ControllerTest(disp),
   new Breakout(disp),
   new Pool(disp),
-  new tictactoe(disp)
+  new tictactoe(disp),
+  new NotDoom(disp)
 };
 int gameCount = 0;
 
@@ -33,6 +35,9 @@ int currGameSelection = 0;
 int btns[6] = {14, 27, 33, 25, 26, 12};
 int lastMillis[6] = {0, 0, 0, 0, 0, 0};
 bool btnVals[6];
+
+bool accBtnVals[6];
+int lastAccChange[6];
 
 int lastFrame = 0;
 
@@ -77,15 +82,15 @@ void IRAM_ATTR ISR_5() {
 }
 
 void HandleInput(int i) {
-  if (millis() - lastMillis[i] > 10) {
+  if (millis() - lastMillis[i] > 5) {
     btnVals[i] = !btnVals[i];
-
     if (currentGame != NULL) {
       currentGame->UpdateInput(i, btnVals[i]);
     }
-
     lastMillis[i] = millis();
   }
+
+  accBtnVals[i] = !accBtnVals[i];
 }
 
 void setup() {
@@ -101,7 +106,6 @@ void setup() {
 
   for (int i = 0; i < 6; i++) {
     pinMode(btns[i], INPUT_PULLUP);
-    btnVals[i] = false;
   }
 
   attachInterrupt(btns[0], ISR_0, CHANGE);
@@ -119,14 +123,13 @@ void setup() {
 }
 
 void loop() {
-  //HandleInputs();
-
   switch (consoleState) {
     case 0: {
         //Select game
         if (btnVals[0]) {
           currentGame = games[currGameSelection];
-          currentGame->UpdateInputs(btnVals);
+
+          //currentGame->UpdateInputs(btnVals);
           consoleState = 1;
         }
 
@@ -154,9 +157,10 @@ void loop() {
         break;
       }
     case 2: {
-        if (millis() - lastFrame > 2) {
-          lastFrame = millis();
+        //currentGame->UpdateInputs(btnVals);
+        if (millis() - lastFrame > 1) {
           currentGame->Draw();
+          lastFrame = millis();
         }
 
         if (btnVals[0] && btnVals[1]) {
@@ -164,6 +168,7 @@ void loop() {
           consoleState = 0;
           RedrawGames();
         }
+
         break;
       }
   }

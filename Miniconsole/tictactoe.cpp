@@ -22,6 +22,8 @@ class tictactoe : public ConsoleGame {
 
     int turn = 1;
 
+    bool gameOver = false;
+
     void Setup() {
       Serial.println("Setting up TicTacToe");
 
@@ -45,8 +47,10 @@ class tictactoe : public ConsoleGame {
     }
 
     void Draw() {
-      MoveCursor();
-      DrawBoard();
+      if (!gameOver) {
+        MoveCursor();
+        DrawBoard();
+      }
     }
 
     void MoveCursor() {
@@ -92,10 +96,17 @@ class tictactoe : public ConsoleGame {
       if (inputs[0]) {
         if (pos[currX][currY] == -1) {
           pos[currX][currY] = turn;
+          CheckWin(0);
+          CheckWin(1);
 
+          if (gameOver) {
+            return;
+          }
+          
           turn = turn == 1 ? 0 : 1;
 
           DrawTurn(currX, currY);
+
         }
       }
 
@@ -116,6 +127,58 @@ class tictactoe : public ConsoleGame {
             DrawX(x, y, -8, false, WHITE);
           }
         }
+      }
+    }
+
+    void CheckWin(int p) {
+      bool win = false;
+
+      bool dWin = true;
+      bool d2Win = true;
+
+      for (int x = 0; x < 3; x++) {
+        bool vWin = true;
+        bool hWin = true;
+
+        int vWinI = x;
+        int hWinI = x;
+        for (int y = 0; y < 3; y++) {
+
+          if (pos[x][y] != p) {
+            hWin = false;
+            hWinI = -1;
+          }
+
+          if (pos[y][x] != p) {
+            vWin = false;
+            vWinI = -1;
+          }
+        }
+
+        if (vWin) {
+          disp->disp.drawLine(8, vWinI * gridSize  + gridSize - 9, 2 * gridSize + gridSize + 8, vWinI * gridSize + gridSize - 9, RED);
+          win = true;
+        }
+        if (hWin) {
+          disp->disp.drawLine(hWinI * gridSize  + gridSize - 9, 8, hWinI * gridSize + gridSize - 9, 2 * gridSize + gridSize + 8, RED);
+          win = true;
+        }
+
+        if (pos[x][x] != p) {
+          dWin = false;
+        }
+        if (pos[2 - x][x] != p ) {
+          d2Win = false;
+        }
+      }
+
+      if (dWin || d2Win) {
+        win = true;
+      }
+
+      if (win) {
+        gameOver = true;
+        //disp->disp.fillRect(0, 0, 8, 8, turn == 1 ? RED : BLUE);
       }
     }
 

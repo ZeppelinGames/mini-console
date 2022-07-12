@@ -3,6 +3,7 @@
 #include <string>
 #include "arduino.h"
 #include "Display.cpp"
+#include "Vector2.cpp"
 
 class ConsoleGame {
   public:
@@ -33,6 +34,26 @@ class ConsoleGame {
         inputs[i] = val;
       }
     }
+
+    boolean A() {
+      return inputs[0];
+    }
+    boolean B() {
+      return inputs[1];
+    }
+    boolean UP() {
+      return inputs[3];
+    }
+    boolean DOWN() {
+      return inputs[5];
+    }
+    boolean LEFT() {
+      return inputs[2];
+    }
+    boolean RIGHT() {
+      return inputs[4];
+    }
+
 
     virtual void Setup();
     virtual void Draw();
